@@ -1,0 +1,11 @@
+node_modules/
+.cache/
+.env
+.env.*
+!.env.example
+coverage/
+dist/
+*.log
+*.pem
+*.key
+private/

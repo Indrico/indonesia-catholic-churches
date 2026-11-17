@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-11-17T13:56:05.376Z",
+  "release_status": "tooling_only",
+  "coverage_complete": false,
+  "extraction_status": "not_run",
+  "total_records": 0,
+  "parish_organizations": 0,
+  "statistics": {
+    "total_records": 0,
+    "by_type": {
+      "katedral": 0,
+      "paroki": 0,
+      "stasi": 0,
+      "kapel": 0
+    },
+    "with_address": 0,
+    "with_phone": 0,
+    "with_email": 0,
+    "with_coordinates": 0,
+    "source_verified": 0,
+    "duplicate_records_removed": 0,
+    "duplicate_records_flagged": 0,
+    "duplicate_pairs_flagged": 0
+  },
+  "sources": [],
+  "groups": {
+    "provinces": [],
+    "dioceses": []
+  },
+  "files_sha256": {
+    "data/churches.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "data/parishes.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "data/id-registry.json": "4d13b5b0df98b7e3390a2bc219e2f1c46d85aaaf79b4b7daf52930b0e76e0d74",
+    "data/churches.csv": "643c61c308cae31c81b1866ffd7751f64479ffb39fbf616abd522b3e4508573e"
+  },
+  "csv": {
+    "encoding": "UTF-8",
+    "null_representation": "empty cell",
+    "nested_fields": "JSON strings",
+    "formula_escaping": "leading apostrophe for formula-like strings"
+  }
+}

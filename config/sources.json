@@ -1,0 +1,49 @@
+{
+  "project_url": "https://github.com/Indrico/indonesia-catholic-churches",
+  "contact": null,
+  "contact_url": "https://github.com/Indrico/indonesia-catholic-churches/issues",
+  "sources": [
+    {
+      "id": "paroki_org",
+      "name": "Paroki.org",
+      "origin": "https://paroki.org",
+      "allow_subdomains": true,
+      "discovery_urls": ["https://paroki.org/browse/", "https://paroki.org/sitemap.xml"],
+      "terms_url": "https://paroki.org/terms/",
+      "terms_sha256": null,
+      "delay_ms": 3000,
+      "permission": {
+        "extraction": "pending",
+        "redistribution": "pending",
+        "commercial_reuse": false,
+        "license": null,
+        "attribution": null,
+        "evidence": [],
+        "reviewed_by": null,
+        "reviewed_at": null,
+        "reason": "Non-commercial attributed use is stated; bulk extraction and open redistribution are not confirmed."
+      }
+    },
+    {
+      "id": "kemenag",
+      "name": "Ditjen Bimas Katolik Kemenag",
+      "origin": "https://bimaskatolik.kemenag.go.id",
+      "allow_subdomains": false,
+      "discovery_urls": [],
+      "terms_url": null,
+      "terms_sha256": null,
+      "delay_ms": 2000,
+      "permission": {
+        "extraction": "pending",
+        "redistribution": "pending",
+        "commercial_reuse": false,
+        "license": null,
+        "attribution": null,
+        "evidence": [],
+        "reviewed_by": null,
+        "reviewed_at": null,
+        "reason": "Reuse conditions unidentified; linked XLSX contains provincial aggregates, not church records. No adapter enabled."
+      }
+    }
+  ]
+}

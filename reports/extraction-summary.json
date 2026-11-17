@@ -1,0 +1,21 @@
+{
+  "status": "not_run",
+  "extracted_observations": null,
+  "duplicate_observations_removed": 0,
+  "total_records": 0,
+  "by_type": {
+    "katedral": 0,
+    "paroki": 0,
+    "stasi": 0,
+    "kapel": 0
+  },
+  "with_address": 0,
+  "with_phone": 0,
+  "with_email": 0,
+  "with_coordinates": 0,
+  "source_verified": 0,
+  "duplicate_records_removed": 0,
+  "duplicate_records_flagged": 0,
+  "duplicate_pairs_flagged": 0,
+  "note": "No production extraction has run. Empty exports are not a national coverage claim."
+}

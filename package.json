@@ -1,0 +1,32 @@
+{
+  "name": "indonesia-catholic-churches",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Permission-gated, field-sourced Catholic worship-site directory for Indonesia",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "discover": "node scripts/discover_profiles.js",
+    "extract": "node scripts/extract_profiles.js",
+    "normalize": "node scripts/normalize.js",
+    "deduplicate": "node scripts/deduplicate.js",
+    "validate": "node scripts/validate.js",
+    "export": "node scripts/export.js",
+    "check": "node scripts/validate.js --check && node scripts/export.js --check",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "cheerio": "^1.1.2",
+    "csv-stringify": "^6.6.0",
+    "libphonenumber-js": "^1.12.0",
+    "robots-parser": "^3.0.1"
+  },
+  "devDependencies": {
+    "csv-parse": "^7.0.3"
+  }
+}

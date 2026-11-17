@@ -1,0 +1,7 @@
+{
+  "version": "1",
+  "province_aliases": {},
+  "diocese_aliases": {},
+  "city_aliases": {},
+  "notes": "Add only reviewed, cited aliases. Ambiguous names remain as supplied and are flagged; do not infer province from diocese."
+}

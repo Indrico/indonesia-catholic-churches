@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Parish organization (not a worship site)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "diocese", "sources", "field_provenance"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "name": { "type": "string", "minLength": 1 },
+    "diocese": { "$ref": "urn:indonesia-catholic-churches:church:1.0.0#/properties/diocese" },
+    "sources": { "$ref": "urn:indonesia-catholic-churches:church:1.0.0#/properties/sources" },
+    "field_provenance": { "$ref": "urn:indonesia-catholic-churches:church:1.0.0#/properties/field_provenance" }
+  }
+}

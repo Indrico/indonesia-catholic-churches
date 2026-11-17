@@ -8,7 +8,7 @@ A source-attributed, versioned dataset of Catholic worship sites in Indonesia, p
 
 - [Prior-art audit](docs/PRIOR-ART.md): existing datasets, measured counts, coverage, licenses, and API availability.
 - [Sources and permission status](SOURCES.md), [data rights](DATA-LICENSE.md), and [unsent permission drafts](docs/permissions/paroki-org-request.md).
-- [Schema and curation](docs/DATA-MODEL.md), [update procedure](docs/UPDATING.md), and [proposed API](docs/API.md).
+- [Schema and curation](docs/DATA-MODEL.md), [update procedure](docs/UPDATING.md), and [static JSON access / future API](docs/API.md).
 - [Manifest](data/manifest.json), [validation](reports/validation.json), [duplicate review](reports/duplicate-review.json), and [missing fields](reports/missing-fields.json).
 
 ## Installation and offline checks
@@ -30,6 +30,24 @@ Tests use synthetic records and a simulated HTTP transport; they never request c
 Province and diocese JSON, `data/churches.csv`, the manifest, and quality reports are generated from the master files. Do not maintain grouped files independently. CSV nulls are empty cells, nested values are JSON strings, and formula-like cells receive a leading apostrophe for safe spreadsheet inspection. JSON is authoritative for exact values.
 
 The church JSON Schema is `schema/church.schema.json`, version 1.0.0, using JSON Schema draft 2020-12. Names are original source names; unknown values are null. Public facts retain field-level provenance, including competing source values. Only explicitly identified institutional contacts may be included.
+
+## Static JSON hosting
+
+The GitHub Pages workflow publishes validated exports and a developer guide after the PR is merged into main. The expected site URL is `https://indrico.github.io/indonesia-catholic-churches/`; it is not live until the first deployment succeeds. The initial published JSON arrays remain empty with `tooling_only` status.
+
+```sh
+npm run build:pages
+```
+
+This offline build creates `dist/pages/`, including the static guide, exact copies of validated JSON/CSV, schemas, and data rights documentation. It never scrapes a source or copies `.cache/`, private files, credentials, or the whole repository. Group links come from the manifest, so nonexistent province/diocese files are not advertised. Developer applications can fetch the JSON directly and filter it themselves; adding a query string to a static file does not filter its HTTP response.
+
+For a local preview, serve **only** `dist/pages/`, for example `python -m http.server 4173 --bind 127.0.0.1 --directory dist/pages`. After a public deployment, verify its JSON responses and CORS against the built artifact:
+
+```sh
+npm run check:pages -- https://indrico.github.io/indonesia-catholic-churches/
+```
+
+PR checks build the site without deployment. Deployment and its public-site check run only from main; the PR is not merged automatically. See [update and hosting instructions](docs/UPDATING.md).
 
 ## Source updates
 

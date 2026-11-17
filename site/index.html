@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Versioned JSON and CSV files for a source-attributed directory of Catholic worship sites in Indonesia.">
+  <title>Indonesia Catholic Churches · Open data</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="./">Indonesia Catholic Churches</a>
+    <a href="https://github.com/Indrico/indonesia-catholic-churches">GitHub repository ↗</a>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">OPEN DIRECTORY · INDONESIA</p>
+      <h1 id="page-title">Church data.<br>Ready for your code.</h1>
+      <p class="lede">A versioned directory of Catholic worship sites, served as plain JSON and CSV. Download a file, keep its attribution, and use it in your application.</p>
+      <div class="status-note">
+        <p><span class="status">{{release_status}}</span> <strong>{{total_records}} published records</strong></p>
+        <p>{{availability}}</p>
+      </div>
+      <dl class="metadata">
+        <div><dt>Schema</dt><dd>{{schema_version}}</dd></div>
+        <div><dt>Dataset generated</dt><dd><time datetime="{{generated_at}}">{{generated_at}}</time></dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="files-title">
+      <p class="eyebrow">01 / GET THE DATA</p>
+      <h2 id="files-title">Direct file access</h2>
+      <p>These links return the published files directly. Church and parish JSON files contain arrays; the manifest contains an object.</p>
+      <ul class="file-list main-files">
+        <li><a href="./data/churches.json">All worship sites <span class="format">JSON</span></a><span>Canonical site records</span></li>
+        <li><a href="./data/churches.csv">All worship sites <span class="format">CSV</span></a><span>Spreadsheet inspection</span></li>
+        <li><a href="./data/manifest.json">Dataset manifest <span class="format">JSON</span></a><span>Counts, groups, sources &amp; checksums</span></li>
+        <li><a href="./data/parishes.json">Parish organizations <span class="format">JSON</span></a><span>Separate from physical sites</span></li>
+        <li><a href="./data/id-registry.json">Identity registry <span class="format">JSON</span></a><span>Stable identities &amp; retired-ID redirects</span></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="groups-title">
+      <p class="eyebrow">02 / SMALLER FILES</p>
+      <h2 id="groups-title">Browse available groups</h2>
+      <p>Groups are generated from the canonical dataset. Discover their URLs and counts through <code>manifest.groups</code>.</p>
+      <div class="groups">
+        <div><h3>By province</h3>{{provinces}}</div>
+        <div><h3>By diocese</h3>{{dioceses}}</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="usage-title">
+      <p class="eyebrow">03 / USE IN YOUR APP</p>
+      <h2 id="usage-title">Fetch, then filter</h2>
+      <p>Use this public URL from another application. Check the release status before treating an empty result as meaningful coverage.</p>
+      <pre tabindex="0" role="region" aria-label="JavaScript example: fetch the published JSON"><code>const base = "https://indrico.github.io/indonesia-catholic-churches/";
+const response = await fetch(`${base}data/churches.json`);
+if (!response.ok) throw new Error(`HTTP ${response.status}`);
+const churches = await response.json();</code></pre>
+      <p>Combine filters in your own application. This example searches names and matches province, city, diocese, and site type; it preserves original response values.</p>
+      <pre tabindex="0" role="region" aria-label="JavaScript example: combined filtering, sorting and pagination"><code>const normalize = value =&gt; (value ?? "").normalize("NFKC").trim().toLowerCase();
+const filters = {
+  q: "stella", province: "DKI Jakarta", city: "Jakarta Barat",
+  diocese: "Keuskupan Agung Jakarta", type: "paroki"
+};
+const matches = churches.filter(church =&gt;
+  (!filters.q || normalize(church.name).includes(normalize(filters.q))) &amp;&amp;
+  (!filters.province || normalize(church.administrative_area.province) === normalize(filters.province)) &amp;&amp;
+  (!filters.city || normalize(church.administrative_area.city) === normalize(filters.city)) &amp;&amp;
+  (!filters.diocese || normalize(church.diocese.name) === normalize(filters.diocese)) &amp;&amp;
+  (!filters.type || church.type === filters.type)
+);
+matches.sort((a, b) =&gt; {
+  const left = normalize(a.name), right = normalize(b.name);
+  return (left &lt; right ? -1 : left &gt; right ? 1 : 0) ||
+    (a.id &lt; b.id ? -1 : a.id &gt; b.id ? 1 : 0);
+});
+const offset = 0, limit = 50;
+const result = {
+  data: matches.slice(offset, offset + limit),
+  pagination: { offset, limit, total: matches.length }
+};</code></pre>
+      <p class="callout">Files are static: adding <code>?province=...</code> does not filter the HTTP response. Filtering and pagination run in the consuming application. There is no live <code>/v1/churches</code> endpoint.</p>
+    </section>
+
+    <section aria-labelledby="rights-title">
+      <p class="eyebrow">04 / SOURCES &amp; RIGHTS</p>
+      <h2 id="rights-title">Keep the evidence with the data</h2>
+      {{sources}}
+      <p>Original code and schema use MIT. Source data retains its own conditions; the code license does not relicense third-party records. Site records carry source attribution, field provenance, conflicts, and verification status.</p>
+      <ul class="document-links">
+        <li><a href="./DATA-LICENSE.md">Data rights</a></li>
+        <li><a href="./SOURCES.md">Sources &amp; permission status</a></li>
+        <li><a href="./schema/church.schema.json">Church schema</a></li>
+        <li><a href="./schema/parish.schema.json">Parish schema</a></li>
+        <li><a href="./docs/API.md">Static data guide &amp; future API design</a></li>
+        <li><a href="./LICENSE">Code license</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <p>A community data project. Not an official Church directory.</p>
+    <a href="https://github.com/Indrico/indonesia-catholic-churches/issues">Report a data or tooling issue ↗</a>
+  </footer>
+</body>
+</html>

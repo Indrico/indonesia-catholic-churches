@@ -1,8 +1,60 @@
-# Proposed read-only API contract
+# Static JSON access and future API design
 
-**Design documentation only. No server, deployment, or live endpoint is implemented.** URLs below are relative proposed routes, not working services. Examples are synthetic and do not represent actual church data.
+## Current delivery model: static files
 
-## Routes
+GitHub Pages will serve the validated export files directly after the tooling PR is merged to main and its first Pages deployment succeeds. Until then, these URLs are examples, not a claim that hosting is live:
+
+```text
+https://indrico.github.io/indonesia-catholic-churches/data/churches.json
+https://indrico.github.io/indonesia-catholic-churches/data/churches.csv
+https://indrico.github.io/indonesia-catholic-churches/data/parishes.json
+https://indrico.github.io/indonesia-catholic-churches/data/id-registry.json
+https://indrico.github.io/indonesia-catholic-churches/data/manifest.json
+```
+
+Church and parish files are bare JSON arrays, without an API envelope. The identity registry and manifest are objects. The registry preserves source identities and retired-ID redirects; the static host does not perform redirects from those entries automatically. The manifest's `groups.provinces` and `groups.dioceses` arrays give the actual group names, relative file URLs and counts. Empty group arrays mean no grouped files are available. Do not assume example province/diocese paths exist before records are published.
+
+The first release is `tooling_only`: zero published records, no production extraction, and source permissions pending. Read `release_status`, `extraction_status`, `coverage_complete`, source licenses and attribution before interpreting the data. Every JSON response is a real static file; requesting a query such as `churches.json?province=...` returns the complete file rather than a server-filtered subset.
+
+```javascript
+const base = "https://indrico.github.io/indonesia-catholic-churches/";
+const response = await fetch(`${base}data/churches.json`);
+if (!response.ok) throw new Error(`HTTP ${response.status}`);
+const churches = await response.json();
+
+const normalize = value => (value ?? "").normalize("NFKC").trim().toLowerCase();
+const filters = {
+  q: "stella", province: "DKI Jakarta", city: "Jakarta Barat",
+  diocese: "Keuskupan Agung Jakarta", type: "paroki"
+};
+const matches = churches.filter(church =>
+  (!filters.q || normalize(church.name).includes(normalize(filters.q))) &&
+  (!filters.province || normalize(church.administrative_area.province) === normalize(filters.province)) &&
+  (!filters.city || normalize(church.administrative_area.city) === normalize(filters.city)) &&
+  (!filters.diocese || normalize(church.diocese.name) === normalize(filters.diocese)) &&
+  (!filters.type || church.type === filters.type)
+);
+matches.sort((a, b) => {
+  const left = normalize(a.name), right = normalize(b.name);
+  return (left < right ? -1 : left > right ? 1 : 0) ||
+    (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+});
+const offset = 0, limit = 50;
+const result = {
+  data: matches.slice(offset, offset + limit),
+  pagination: { offset, limit, total: matches.length }
+};
+```
+
+The `result` object is generated inside the consuming application. It does not create a new public HTTP endpoint. Fetch a province or diocese group first when only that subset is needed. Retain source attribution and observe the source data license when storing, filtering or redistributing the data. CSV uses empty cells for nulls, JSON strings for nested fields, and leading apostrophes for formula-like values; JSON remains authoritative.
+
+Public-site checks verify JSON MIME types, cross-origin browser access, counts, and exact correspondence to the deployment artifact. No authentication or custom request headers are needed for normal public fetches. GitHub Pages caching can temporarily return an earlier deployment; compare manifest generation time when matching data revisions.
+
+## Future read-only REST API — not implemented
+
+**REST design documentation only. No server or live `/v1/` endpoint is implemented.** URLs below are relative proposed routes, not working services. Examples are synthetic and do not represent actual church data.
+
+### Routes
 
 | Method | Route | Response |
 | --- | --- | --- |
@@ -14,7 +66,7 @@
 
 `churches` returns sites, not parish organizations. Types are mutually exclusive site classifications; a cathedral that is also a parish church is counted once as `katedral`. `parent_parish_id`, when confirmed, identifies a separate parish organization.
 
-## Filtering and ordering
+### Filtering and ordering
 
 Supported query parameters are `q`, `province`, `city`, `diocese`, `type`, `limit`, and `offset`. Trim and normalize search/filter strings with Unicode NFKC and lowercase. Preserve source names in response values.
 
@@ -33,7 +85,7 @@ GET /v1/churches?type=paroki
 GET /v1/churches?province=DKI%20Jakarta&type=paroki&limit=20&offset=0
 ```
 
-## Responses
+### Responses
 
 A synthetic empty collection response:
 

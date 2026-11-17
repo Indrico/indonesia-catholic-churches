@@ -75,4 +75,16 @@ Review the actual diff, all reports, permission evidence, institutional contacts
 
 ## 5. Publish through a PR
 
-Push the dedicated branch and open a PR. The offline CI workflow checks tests and canonical/generated consistency. CI does not crawl sources, send messages, approve permission, publish a dataset, or merge. Never describe the first tooling PR as an extracted national dataset. Subsequent releases remain `partial` until a separately evidenced national coverage assessment is approved; the current exporter never claims complete national coverage.
+Push the dedicated branch and open a PR. CI checks tests, canonical/generated consistency, and the Pages build. It does not crawl sources, send messages, approve source permission, or merge. Never describe the first tooling PR as an extracted national dataset. Subsequent releases remain `partial` until a separately evidenced national coverage assessment is approved; the current exporter never claims complete national coverage.
+
+## 6. GitHub Pages publication
+
+Pages uses **GitHub Actions** as its publishing source. Its workflow runs a validated build for PRs and main; only main may upload and deploy a Pages artifact. The deploy job has `pages: write` and `id-token: write`; PR validation retains read-only repository access. The implementation PR remains unmerged for human review, so enabling the repository setting does not itself publish the feature branch.
+
+`npm run build:pages` checks current source rights and export consistency before replacing `dist/pages/`. It copies only the validated data files, two schemas, the static guide, and the listed public documentation. It preserves data bytes/checksums and includes `.nojekyll` for underscore-prefixed unassigned files. Failed validation leaves an earlier build intact. Build output is ignored by Git.
+
+The public manifest provides group file discovery. The first tooling-only deployment has empty arrays and no province/diocese group links. When licensed data is merged later, the same workflow publishes its regenerated groups without independently maintained website datasets. Source records with pending or revoked rights fail validation and cannot enter a new Pages artifact.
+
+After deployment, the workflow checks the root guide, manifest, church/parish JSON and representative existing groups using HTTP requests. It requires HTTP 200, a JSON content type, cross-origin browser access, and bytes matching the validated artifact. It retries briefly for deployment propagation, then fails visibly if the public content is stale or incorrect. The check uses native Node APIs and does not contact source websites.
+
+To redeploy an already reviewed main revision, use the workflow's manual dispatch from main. Dispatching from a feature branch only validates/builds; it cannot deploy. Keep the `github-pages` environment restricted to main. No REST server, search UI, scheduled scraper, or backend is introduced by this publication workflow.

@@ -16,6 +16,8 @@
     "validate": "node scripts/validate.js",
     "export": "node scripts/export.js",
     "check": "node scripts/validate.js --check && node scripts/export.js --check",
+    "build:pages": "node scripts/build_pages.js",
+    "check:pages": "node scripts/check_pages.js",
     "test": "node --test"
   },
   "dependencies": {

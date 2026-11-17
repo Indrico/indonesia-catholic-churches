@@ -2,6 +2,10 @@
 
 ## Current delivery model: static files
 
+The separate source listing is available at `data/listings/paroki-org.json` (bare array), with CSV at `data/listings/paroki-org.csv` and rights/counts/checksums at `data/listings/manifest.json`, under the site base below. These are unreviewed listing observations, not verified Indonesian church records. The source includes Indonesia and Timor-Leste; country/type may be absent. Publication permission is reported by the owner, but an explicit downstream license is not confirmed. Inspect the listing manifest before reuse.
+
+External listing JSON is minified and recursively omits null-valued object properties; missing means unknown. Empty containers, false, zero and array positions are preserved. Use optional access such as `record.type ?? null`. The local full master keeps explicit nulls; `schema/listing.compact.schema.json` describes the external view. The canonical `data/churches.json` contract remains separate.
+
 GitHub Pages will serve the validated export files directly after the tooling PR is merged to main and its first Pages deployment succeeds. Until then, these URLs are examples, not a claim that hosting is live:
 
 ```text
@@ -14,7 +18,7 @@ https://indrico.github.io/indonesia-catholic-churches/data/manifest.json
 
 Church and parish files are bare JSON arrays, without an API envelope. The identity registry and manifest are objects. The registry preserves source identities and retired-ID redirects; the static host does not perform redirects from those entries automatically. The manifest's `groups.provinces` and `groups.dioceses` arrays give the actual group names, relative file URLs and counts. Empty group arrays mean no grouped files are available. Do not assume example province/diocese paths exist before records are published.
 
-The first release is `tooling_only`: zero published records, no production extraction, and source permissions pending. Read `release_status`, `extraction_status`, `coverage_complete`, source licenses and attribution before interpreting the data. Every JSON response is a real static file; requesting a query such as `churches.json?province=...` returns the complete file rather than a server-filtered subset.
+The canonical manifest remains `tooling_only` with zero accepted records; the separate source-listing manifest counts its unreviewed observations. Read each manifest's status, coverage and permission information before interpreting the data. Every JSON response is a real static file; requesting a query such as `churches.json?province=...` returns the complete file rather than a server-filtered subset.
 
 ```javascript
 const base = "https://indrico.github.io/indonesia-catholic-churches/";

@@ -1,0 +1,13 @@
+{
+  "source_id": "paroki_org",
+  "source_url": "https://paroki.org/browse/",
+  "redistribution_permission": "confirmed_by_owner_attestation",
+  "evidence": "docs/permissions/paroki-org-publication.md",
+  "attested_at": "2026-11-17",
+  "license": "not_confirmed",
+  "commercial_use": "not_confirmed",
+  "non_commercial_use": "not_confirmed",
+  "attribution_requirements": "not_confirmed",
+  "source_snapshot_sha256": "51353a5d424da3288d0361f5b207f6c89f8dffa8083cdfcc97b69e54dbf77240",
+  "terms_sha256": "4769cc66766967d44f73825e81b7f69d9db2aee7d079d2af55b4d0ddac664b1b"
+}

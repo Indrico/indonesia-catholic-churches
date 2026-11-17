@@ -6,7 +6,9 @@ This mode reads server-rendered `/browse/` cards without visiting profiles, JSON
 
 On 2026-11-17 the maintainer reported oral permission from the source operator for extraction. The actual grant date, redistribution terms, commercial reuse and license were not supplied. Record this as a private maintainer attestation, not written correspondence or an open data license. Public source permissions remain pending.
 
-Every run requires `.cache/paroki_org/listing/permission.json`. Fresh checkouts have no grant and refuse source requests. Record actual authorization before completing this intentionally non-authorizing template:
+The owner later specifically confirmed permission to publish the listing JSON/CSV. That separate [publication attestation](permissions/paroki-org-publication.md) does not establish an open downstream license. Local runs remain independent of it; only the explicit `prepare:listing-release` command creates public listing artifacts.
+
+The owner authorizes local development. Fresh checkouts use `config/local-listing-access.json`, which restricts access to the listing and reviewed terms without requiring redistribution, commercial reuse or an explicit license. Existing private `.cache/paroki_org/listing/permission.json` evidence is preserved when present. Unknown permission fields do not stop local processing; publication remains separate. The following is an evidence template, not a prerequisite for local execution:
 
 ```json
 {
@@ -26,13 +28,14 @@ Every run requires `.cache/paroki_org/listing/permission.json`. Fresh checkouts 
 }
 ```
 
-For an actual reviewed grant, set extraction to `approved`, identify `oral`/`written`, fill attestation/attester/date, and supply SHA-256 of reviewed decoded terms HTML encoded as UTF-8. Do not fabricate a grant date or license. A fingerprint alone is not permission. Every live retrieval checks the terms against this fingerprint; changes stop the run for review. There is no force/bypass flag.
+Record real source permission when supplied; do not fabricate a grant date or license. The configured SHA-256 identifies reviewed decoded terms HTML encoded as UTF-8, not reuse rights. Every live retrieval checks the terms; changes stop the source for investigation. Do not repeatedly ask the owner to approve permitted local work.
 
 Email was deferred by the maintainer. The real project GitHub Issues URL is the temporary User-Agent contact in `config/sources.json`. Local extraction accepts email or HTTPS contact URL; the existing profile/publication workflow still requires email and full reuse rights.
 
 ## Run and resume
 
 ```sh
+npm run discover:list
 npm run extract:list -- --sample
 # Compare the five sample cards with their original HTML in snapshot.json.
 npm run extract:list
@@ -51,7 +54,7 @@ Policy changes require reviewing/archiving the old private cache while preservin
 All artifacts live under ignored `.cache/paroki_org/listing/`:
 
 - `snapshot.json`, `network.json`, and per-identity `records/` support traceability/resume. Logs contain request URLs/statuses/times, not cookies or credentials.
-- `churches.json`, UTF-8 `churches.csv`, and `churches.schema.json` contain private candidates and their staging schema. CSV nulls are blank, nested values JSON strings, and formula-like text escaped.
+- `churches.json`, UTF-8 `churches.csv`, and `churches.schema.json` contain private candidates and their staging schema. `churches.compact.json` is a minified external view with null object properties recursively omitted; zero/false and array positions survive. The local master keeps explicit nulls. CSV nulls are blank, nested values JSON strings, and formula-like text escaped.
 - `discovered_profiles.json`, `progress.json`, and `id-registry.json` contain URL/status and UUID mappings.
 - `reports/` contains extraction, validation, missing-field, duplicate and field-review results. Ambiguous group/header labels remain in review context.
 - `countries/` contains derived Indonesia, other-country and unknown-country views. Unknown-country records are not counted as Indonesian sites.

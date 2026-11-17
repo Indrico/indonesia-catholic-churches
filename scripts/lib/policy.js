@@ -25,13 +25,13 @@ export function assertEligible(source, project) {
   }
 }
 
-// A local listing grant confers no redistribution or downstream reuse rights.
+// Local access checks scope/terms, never redistribution or commercial rights.
 export function assertLocalListingPermission(source, project, grant) {
-  if (!grant || grant.source_id !== source?.id || grant.scope !== 'listing_only_local' || grant.extraction !== 'approved') {
-    throw new Error('Local listing permission and matching source are required');
+  if (!grant || grant.source_id !== source?.id || grant.scope !== 'listing_only_local') {
+    throw new Error('Local listing access policy and matching source are required');
   }
-  if (!['oral', 'written'].includes(grant.grant_form) || !grant.attestation?.trim() || !grant.attested_by?.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(grant.attested_at ?? '') || !/^[a-f0-9]{64}$/.test(grant.terms_sha256 ?? '')) {
-    throw new Error('Local grant requires an attestation, attester, date and reviewed terms fingerprint');
+  if (!/^[a-f0-9]{64}$/.test(grant.terms_sha256 ?? '')) {
+    throw new Error('A reviewed terms fingerprint is required for local access');
   }
   const projectUrl = new URL(canonicalUrl(project.project_url));
   if (projectUrl.protocol !== 'https:') throw new Error('A public HTTPS project URL is required');

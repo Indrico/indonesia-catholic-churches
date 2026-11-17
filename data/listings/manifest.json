@@ -1,0 +1,29 @@
+{
+  "release_status": "unreviewed_source_listing",
+  "generated_at": "2026-11-17T15:50:11.232Z",
+  "total_records": 2224,
+  "verified_records": 0,
+  "coverage_complete": false,
+  "geography": "Indonesia and Timor-Leste source directory; record countries are unconfirmed",
+  "representation": "minified JSON; null object properties omitted; absent fields mean unknown",
+  "permission": {
+    "source_id": "paroki_org",
+    "source_url": "https://paroki.org/browse/",
+    "redistribution_permission": "confirmed_by_owner_attestation",
+    "evidence": "docs/permissions/paroki-org-publication.md",
+    "attested_at": "2026-11-17",
+    "license": "not_confirmed",
+    "commercial_use": "not_confirmed",
+    "non_commercial_use": "not_confirmed",
+    "attribution_requirements": "not_confirmed",
+    "source_snapshot_sha256": "51353a5d424da3288d0361f5b207f6c89f8dffa8083cdfcc97b69e54dbf77240",
+    "terms_sha256": "4769cc66766967d44f73825e81b7f69d9db2aee7d079d2af55b4d0ddac664b1b"
+  },
+  "files_sha256": {
+    "data/listings/paroki-org.json": "0bef457b74a55125e992ebb02a891d1e4bb6b3e81edf1ad188294fab4d6e88b7",
+    "data/listings/paroki-org.csv": "9b9ee89d42415e9335dc96fd2d8bef056d44df8e4520c79b9b112e6f648a0297",
+    "schema/listing.compact.schema.json": "9cdbcd41f96db03fc90c4d02c293ff3c8bccd3a099dddea24bc717725303aec1",
+    "reports/listings/quality.json": "833241c602be4b9efcfe4c4ef5001a8e23d53c2bda74e51619cdc197283ca5db",
+    "reports/listings/duplicates.json": "0ad03fe8d1179b4cca3b177b083ec7289f5d9a296aa53ea18d248308c0e0f0ee"
+  }
+}

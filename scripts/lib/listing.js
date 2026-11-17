@@ -42,6 +42,7 @@ export function parseListing(body, url, source, termsSha256, accessedAt, { sampl
   if (canonical && allowedUrl(canonicalUrl(canonical, url), source) !== url) throw new Error('Unexpected listing canonical URL');
   const selected = sample ? [...new Set([0, Math.floor(cards.length / 4), Math.floor(cards.length / 2), Math.floor(3 * cards.length / 4), cards.length - 1])] : cards.map((_, i) => i);
   const observations = [], errors = [];
+  const contentSha256 = hash(body);
   for (const index of selected) {
     const card = $(cards[index]);
     const locator = `article.browse-card:nth-of-list(${index + 1})`;
@@ -117,7 +118,7 @@ export function parseListing(body, url, source, termsSha256, accessedAt, { sampl
     if (/^(?:sekolah|seminari|biara|universitas|rumah sakit)\b/i.test(name)) issues.push('excluded_institution');
     observations.push({
       identity, context, fields, issues: [...new Set(issues)],
-      source: { source_id: source.id, name: source.name, url, identity_url: identity, accessed_at: accessedAt, license: null, terms_sha256: termsSha256, content_sha256: hash(body), extractor_version: `listing-${LISTING_VERSION}` }
+      source: { source_id: source.id, name: source.name, url, identity_url: identity, accessed_at: accessedAt, license: null, terms_sha256: termsSha256, content_sha256: contentSha256, extractor_version: `listing-${LISTING_VERSION}` }
     });
   }
   if (!observations.length) throw new Error('Listing structure changed: no usable card identities; previous results preserved');

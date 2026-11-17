@@ -59,7 +59,7 @@ test('Pages publishes only allowed files, preserves export bytes, and clearly ma
     }
     assert.deepEqual(await readJson(path.join(result.directory, 'data/churches.json')), []);
     const page = await readFile(path.join(result.directory, 'index.html'), 'utf8');
-    assert.ok(page.includes('tooling_only') && page.includes('0 published records') && page.includes('Source permissions are pending'));
+    assert.ok(page.includes('tooling_only') && page.includes('0 canonical records') && page.includes('Source permissions are pending'));
     assert.ok(page.includes('No grouped files are available yet.'));
     assert.ok(!page.includes('{{'));
     const $ = cheerio.load(page);

@@ -4,7 +4,7 @@ Audit date: **2026-11-17**. [Full prior-art report](docs/PRIOR-ART.md).
 
 | Source | Acquisition / structure | Redistribution status | Action |
 | --- | --- | --- | --- |
-| [Paroki.org](https://paroki.org/browse/) | Public server-rendered listing; profile Church JSON-LD; static JSON referenced by client | Bulk republication and open commercial reuse pending | Maintainer-attested oral permission for local listing extraction; profile/publication adapter blocked |
+| [Paroki.org](https://paroki.org/browse/) | Public server-rendered listing; profile Church JSON-LD; static JSON referenced by client | Listing publication confirmed by owner report; downstream license/commercial reuse unconfirmed | Separate unreviewed listing release; canonical admission stays gated |
 | [Kemenag](https://bimaskatolik.kemenag.go.id/index.php/dataset/5) | Download points to provincial aggregate XLSX | License unidentified | Ask for terms and church-level export; no adapter |
 | [Rebornian48/katolik](https://github.com/Rebornian48/katolik) | SQLite schema and 84-row JSON seed | No license found; no per-seed provenance | Reference only; consider collaboration |
 | [Yudhass/Gereja-Katolik-Indonesia](https://github.com/Yudhass/Gereja-Katolik-Indonesia) | PHP directory, raw provincial POI JSON/CSV, administrative references and SQL snapshots | Data license and upstream POI rights unresolved despite README MIT statement | Reference only |
@@ -22,6 +22,7 @@ Audit date: **2026-11-17**. [Full prior-art report](docs/PRIOR-ART.md).
 - Profile JSON-LD can omit administrative fields and coordinates. `parentOrganization` can identify a diocese rather than a parish. Type claims may need review; neither structured formatting nor successful retrieval implies verification.
 - [Indonesian permission draft](docs/permissions/paroki-org-request.md): **not sent**.
 - The maintainer subsequently reported oral permission from the operator for local extraction. The actual grant date and license were not supplied. The attestation stays private; see [listing-only workflow](docs/LISTING-EXTRACTION.md). This establishes no public redistribution or commercial reuse license.
+- The owner later specifically confirmed operator permission to publish the collected listing JSON/CSV. See the [publication attestation](docs/permissions/paroki-org-publication.md). This supports the separate unreviewed source listing; its downstream license and commercial reuse remain unconfirmed. It does not admit records to the canonical openly reusable directory.
 
 ## Source register
 

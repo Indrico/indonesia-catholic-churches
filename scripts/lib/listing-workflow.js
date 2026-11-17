@@ -5,6 +5,19 @@ import { assertLocalListingPermission } from './policy.js';
 import { PoliteClient } from './http.js';
 import { retrieve } from './workflow.js';
 import { parseListing, normalizeListingGroup, validateListing, listingStatistics, sortListing, LISTING_VERSION, listingSchema } from './listing.js';
+import { compactJson } from './compact.js';
+
+export async function discoverListing(options) {
+  const { directory, source, grant } = options;
+  const snapshot = await listingSnapshot(options);
+  const parsed = parseListing(snapshot.body, snapshot.url, source, grant.terms_sha256, snapshot.accessed_at);
+  const progress = await readJson(path.join(directory, 'progress.json'), { entries: {} });
+  const urls = [...new Set(parsed.observations.map(item => item.identity))].sort();
+  await writeJson(path.join(directory, 'discovered_profiles.json'), urls.map(url => ({ url, discovered_at: snapshot.accessed_at, status: progress.entries[url]?.status ?? 'pending' })));
+  const report = { profile_urls_discovered: urls.length, cards_found: parsed.card_count, parsing_errors: parsed.errors, profile_pages_requested: 0, snapshot_sha256: snapshot.body_sha256 };
+  await writeJson(path.join(directory, 'reports/discovery.json'), report);
+  return report;
+}
 
 export async function listingSnapshot({ directory, source, project, grant, refresh = false, clientFactory = (s, p, options) => new PoliteClient(s, p, options) }) {
   assertLocalListingPermission(source, project, grant);
@@ -84,6 +97,7 @@ export async function runListing({ directory, source, project, grant, sample = f
     const artifact = (file, value) => writeJson(path.join(output, file), value);
     await artifact('churches.schema.json', listingSchema);
     await artifact('churches.json', records);
+    await atomicWrite(path.join(output, 'churches.compact.json'), compactJson(records));
     const rows = records.map(r => ({ id: r.id, name: r.name, type: r.type, ...r.administrative_area, diocese: r.diocese.name, address: r.address, ...r.contact, ...r.location, profile_url: r.sources[0].identity_url, source_url: r.sources[0].url, mass_schedules_json: JSON.stringify(r.mass_schedules), sources_json: JSON.stringify(r.sources), field_provenance_json: JSON.stringify(r.field_provenance), conflicts_json: JSON.stringify(r.conflicts) }));
     const columns = ['id', 'name', 'type', 'country', 'province', 'city', 'district', 'subdistrict', 'postal_code', 'diocese', 'address', 'phone', 'phone_e164', 'email', 'website', 'latitude', 'longitude', 'coordinate_source', 'google_maps_url', 'profile_url', 'source_url', 'mass_schedules_json', 'sources_json', 'field_provenance_json', 'conflicts_json'];
     await atomicWrite(path.join(output, 'churches.csv'), stringify(rows, { header: true, columns, escape_formulas: true, record_delimiter: '\n' }));

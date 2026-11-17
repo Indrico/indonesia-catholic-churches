@@ -1,0 +1,14 @@
+{
+  "source_id": "paroki_org",
+  "scope": "listing_only_local",
+  "owner_authorized": true,
+  "listing_url": "https://paroki.org/browse/",
+  "terms_sha256": "4769cc66766967d44f73825e81b7f69d9db2aee7d079d2af55b4d0ddac664b1b",
+  "terms_reviewed_at": "2026-11-17",
+  "license": "not_confirmed",
+  "redistribution_permission": "not_confirmed",
+  "commercial_use": "not_confirmed",
+  "non_commercial_use": "not_confirmed",
+  "attribution_requirements": "not_confirmed",
+  "note": "Owner authorization for local collection; unknown rights fields are not a public redistribution grant. Retain actual evidence separately."
+}

@@ -2,7 +2,9 @@
 
 A source-attributed, versioned dataset of Catholic worship sites in Indonesia, prepared for a future read-only API.
 
-**Public release status: tooling only.** Production JSON arrays are empty. Private listing extraction supports local collection under a maintainer-attested source grant; redistribution and commercial reuse remain unconfirmed. This repository is not a completed national directory, and does not claim to be the first or only directory.
+**Public source listing: 2,224 unreviewed entries.** The project owner reports operator permission to publish the JSON/CSV. No explicit downstream data license has been confirmed. Country and church type remain unconfirmed; the source includes Indonesia and Timor-Leste. The canonical openly reusable Indonesian directory remains empty. This is not a completed national directory.
+
+Access the compact [source-listing JSON](data/listings/paroki-org.json), [CSV](data/listings/paroki-org.csv), [listing manifest](data/listings/manifest.json), and [quality report](reports/listings/quality.json). JSON is minified and recursively omits null-valued object properties. Original local records retain explicit nulls; all views are generated from that master. Publication permission is recorded in the [maintainer attestation](docs/permissions/paroki-org-publication.md); MIT/GPL has not been applied to third-party records.
 
 ## Start here
 
@@ -33,7 +35,7 @@ The church JSON Schema is `schema/church.schema.json`, version 1.0.0, using JSON
 
 ## Static JSON hosting
 
-The GitHub Pages workflow publishes validated exports and a developer guide after the PR is merged into main. The expected site URL is `https://indrico.github.io/indonesia-catholic-churches/`; it is not live until the first deployment succeeds. The initial published JSON arrays remain empty with `tooling_only` status.
+The GitHub Pages workflow publishes validated exports and a developer guide from main at `https://indrico.github.io/indonesia-catholic-churches/`. The canonical arrays remain empty with `tooling_only` status; the separate Paroki.org source listing has its own manifest and count. Hosting is available after a successful deployment.
 
 ```sh
 npm run build:pages
@@ -54,11 +56,12 @@ PR checks build the site without deployment. Deployment and its public-site chec
 For the current **private listing-only** stage, see [local extraction and resume](docs/LISTING-EXTRACTION.md):
 
 ```sh
+npm run discover:list
 npm run extract:list -- --sample
 npm run extract:list
 ```
 
-These commands require an ignored local grant and write only to `.cache/paroki_org/listing/`. They do not visit profiles or populate public data. Review five sample cards before the first full run. Email is deferred; the real GitHub Issues URL supplies the temporary contact. Unknown country/type and license remain null in staging; public validation stays strict.
+These owner-authorized local commands write only to `.cache/paroki_org/listing/`; unknown redistribution or license information does not block them. They do not visit profiles or populate public data. Review five sample cards before the first full run. Email is deferred; the real GitHub Issues URL supplies the temporary contact. Unknown country/type and license remain null in staging. `churches.compact.json` omits null object properties and whitespace for external delivery while the master retains explicit unknowns.
 
 The following **profile/publication** workflow remains blocked by the source configuration. First obtain the documented permissions, record reviewed evidence and attribution, set the approved terms fingerprint, and supply a real institutional contact. The [update procedure](docs/UPDATING.md) explains every stage and review checkpoint.
 

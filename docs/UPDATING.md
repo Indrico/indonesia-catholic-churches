@@ -79,7 +79,9 @@ Push the dedicated branch and open a PR. CI checks tests, canonical/generated co
 
 ## 6. GitHub Pages publication
 
-Pages uses **GitHub Actions** as its publishing source. Its workflow runs a validated build for PRs and main; only main may upload and deploy a Pages artifact. The deploy job has `pages: write` and `id-token: write`; PR validation retains read-only repository access. The implementation PR remains unmerged for human review, so enabling the repository setting does not itself publish the feature branch.
+For the separate source listing, `npm run prepare:listing-release` derives compact JSON, CSV, schema and quality reports from the validated private master. It checks the recorded owner attestation and pins the reviewed source snapshot. `npm run check` verifies its schema, source identity, permission metadata and checksums independently of canonical admission. Pages copies only this explicit release allowlist. Rebuilding local data never automatically publishes it or updates the attestation.
+
+Pages uses **GitHub Actions** as its publishing source. Its workflow runs a validated build for PRs and main; only main may upload and deploy a Pages artifact. The deploy job has `pages: write` and `id-token: write`; PR validation retains read-only repository access. Merge/release requires the owner's instruction; enabling the repository setting alone does not publish a feature branch.
 
 `npm run build:pages` checks current source rights and export consistency before replacing `dist/pages/`. It copies only the validated data files, two schemas, the static guide, and the listed public documentation. It preserves data bytes/checksums and includes `.nojekyll` for underscore-prefixed unassigned files. Failed validation leaves an earlier build intact. Build output is ignored by Git.
 

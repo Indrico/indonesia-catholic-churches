@@ -187,13 +187,15 @@ export function similarity(a, b) {
 }
 export function duplicateCandidates(records) {
   const issues = [];
+  const names = records.map(r => normalizedName(r.name));
+  const identities = records.map(r => new Set(r.sources.map(sourceIdentity)));
   for (let i = 0; i < records.length; i++) for (let j = i + 1; j < records.length; j++) {
     const a = records[i], b = records[j], reasons = [];
-    if (normalizedName(a.name) === normalizedName(b.name)) reasons.push('same_name');
+    if (names[i] === names[j]) reasons.push('same_name');
     else if ((a.administrative_area.city && a.administrative_area.city === b.administrative_area.city) || (a.diocese.name && a.diocese.name === b.diocese.name)) {
       if (similarity(a.name, b.name) >= 0.90) reasons.push('similar_name');
     }
-    if (a.sources.some(x => b.sources.some(y => sourceIdentity(x) === sourceIdentity(y)))) reasons.push('same_canonical_url');
+    if ([...identities[i]].some(identity => identities[j].has(identity))) reasons.push('same_canonical_url');
     if (a.contact.phone_e164 && a.contact.phone_e164 === b.contact.phone_e164) reasons.push('same_phone');
     if (a.location.latitude !== null && a.location.longitude !== null && a.location.latitude === b.location.latitude && a.location.longitude === b.location.longitude) reasons.push('same_coordinates');
     if (reasons.length) issues.push({ ids: [a.id, b.id], reasons, resolution: 'pending' });

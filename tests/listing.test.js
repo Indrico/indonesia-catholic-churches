@@ -6,7 +6,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { parse as parseCsv } from 'csv-parse/sync';
 import { parseListing, normalizeListingGroup, validateListing, mapCoordinates, listingStatistics } from '../scripts/lib/listing.js';
-import { runListing, listingSnapshot } from '../scripts/lib/listing-workflow.js';
+import { runListing, listingSnapshot, discoverListing } from '../scripts/lib/listing-workflow.js';
 import { PoliteClient } from '../scripts/lib/http.js';
 import { assertEligible, assertLocalListingPermission } from '../scripts/lib/policy.js';
 import { writeJson, readJson, hash, json } from '../scripts/lib/io.js';
@@ -57,8 +57,8 @@ test('oral grant permits only local listing requests and confers no publication 
   const selected = setup();
   assert.doesNotThrow(() => assertLocalListingPermission(selected.source, selected.project, selected.grant));
   assert.throws(() => assertEligible(selected.source), /Permission blocked/);
-  assert.throws(() => assertLocalListingPermission(selected.source, selected.project, null), /permission/);
-  assert.throws(() => assertLocalListingPermission(selected.source, selected.project, { ...selected.grant, scope: 'all_profiles' }), /permission/);
+  assert.throws(() => assertLocalListingPermission(selected.source, selected.project, null), /access policy/);
+  assert.throws(() => assertLocalListingPermission(selected.source, selected.project, { ...selected.grant, scope: 'all_profiles' }), /access policy/);
   const t = transport(page(card('one')));
   const client = t.clientFactory(selected.source, selected.project, { localListingGrant: selected.grant });
   for (const forbidden of ['https://one.example.org/', 'https://example.org/data/profiles.json', 'https://example.org/sitemap.xml', 'https://example.org/browse/?q=test']) await assert.rejects(client.get(forbidden), /forbids/);
@@ -178,13 +178,31 @@ test('sample selects at most five cards and replay leaves IDs stable without mor
 test('pending grant, changed policy and Retry-After block before network access', async () => temporary(async directory => {
   const selected = setup();
   const fail = () => { throw new Error('Network must not run'); };
-  await assert.rejects(listingSnapshot({ ...selected, directory, grant: null, clientFactory: fail }), /permission/);
+  await assert.rejects(listingSnapshot({ ...selected, directory, grant: null, clientFactory: fail }), /access policy/);
   await writeJson(path.join(directory, 'network.json'), { requests: [], retry_at: new Date(Date.now() + 60000).toISOString() });
   await assert.rejects(listingSnapshot({ ...selected, directory, clientFactory: fail }), /paused until/);
   const policy_hash = hash(json({ source: selected.source, grant: selected.grant, project: selected.project }));
   await writeJson(path.join(directory, 'snapshot.json'), { policy_hash: 'changed' });
   await assert.rejects(listingSnapshot({ ...selected, directory, clientFactory: fail }), /policy changed/);
   assert.equal(policy_hash.length, 64);
+}));
+
+test('local collection and discovery work with all reuse permissions unknown', async () => temporary(async directory => {
+  const selected = setup();
+  selected.grant = { source_id: selected.source.id, scope: 'listing_only_local', listing_url: selected.grant.listing_url, terms_sha256: selected.grant.terms_sha256, license: null, redistribution_permission: 'not_confirmed', commercial_use: 'not_confirmed', non_commercial_use: 'not_confirmed', attribution_requirements: 'not_confirmed' };
+  const t = transport(page(card('one') + card('two')));
+  const discovered = await discoverListing({ ...selected, directory, clientFactory: t.clientFactory });
+  assert.equal(discovered.profile_urls_discovered, 2);
+  assert.equal(discovered.profile_pages_requested, 0);
+  const result = await runListing({ ...selected, directory, clientFactory: () => { throw new Error('Use cached listing'); } });
+  assert.equal(result.total_records, 2);
+  const master = await readJson(path.join(directory, 'churches.json'));
+  const compact = await readJson(path.join(directory, 'churches.compact.json'));
+  assert.equal(master[0].type, null);
+  assert.equal(Object.hasOwn(compact[0], 'type'), false);
+  assert.equal(compact[0].id, master[0].id);
+  assert.equal(t.calls.length, 3);
+  assert.throws(() => assertEligible(selected.source), /Permission blocked/);
 }));
 
 test('a shared listing URL keeps distinct public identities and phone duplicates remain review-only', async () => {

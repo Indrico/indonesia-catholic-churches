@@ -10,6 +10,8 @@ export async function checkPublishedPages(base, artifactRoot, { fetchImpl = fetc
   const manifest = await readJson(path.join(artifactRoot, 'data/manifest.json'));
   const groupFiles = [manifest.groups.provinces[0]?.file, manifest.groups.dioceses[0]?.file].filter(Boolean);
   const files = ['index.html', 'data/manifest.json', 'data/churches.json', 'data/parishes.json', ...groupFiles];
+  const listing = await readJson(path.join(artifactRoot, 'data/listings/manifest.json'), null);
+  if (listing) files.push('data/listings/manifest.json', 'data/listings/paroki-org.json');
   for (const file of files) {
     const response = await fetchImpl(new URL(file === 'index.html' ? './' : file, url), { headers: { Origin: 'https://example.org' }, signal: AbortSignal.timeout(30000), redirect: 'error' });
     if (response.status !== 200) throw new Error(`${file}: expected HTTP 200, received ${response.status}`);
@@ -22,5 +24,5 @@ export async function checkPublishedPages(base, artifactRoot, { fetchImpl = fetc
     const expected = await readFile(path.join(artifactRoot, file));
     if (hash(body) !== hash(expected)) throw new Error(`${file}: published content differs from the build artifact`);
   }
-  return { base_url: url.href, checked_files: files.length, total_records: manifest.total_records };
+  return { base_url: url.href, checked_files: files.length, total_records: manifest.total_records, source_listing_records: listing?.total_records ?? 0 };
 }

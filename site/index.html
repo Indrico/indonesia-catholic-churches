@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Versioned JSON and CSV files for a source-attributed directory of Catholic worship sites in Indonesia.">
-  <title>Indonesia Catholic Churches · Open data</title>
+  <title>Indonesia Catholic Churches · JSON directory</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -16,15 +16,21 @@
     <section class="intro" aria-labelledby="page-title">
       <p class="eyebrow">OPEN DIRECTORY · INDONESIA</p>
       <h1 id="page-title">Church data.<br>Ready for your code.</h1>
-      <p class="lede">A versioned directory of Catholic worship sites, served as plain JSON and CSV. Download a file, keep its attribution, and use it in your application.</p>
+      <p class="lede">Versioned JSON and CSV with source evidence, review status, and documented reuse conditions.</p>
       <div class="status-note">
-        <p><span class="status">{{release_status}}</span> <strong>{{total_records}} published records</strong></p>
+        <p><span class="status">{{release_status}}</span> <strong>{{total_records}} canonical records</strong></p>
         <p>{{availability}}</p>
       </div>
       <dl class="metadata">
         <div><dt>Schema</dt><dd>{{schema_version}}</dd></div>
         <div><dt>Dataset generated</dt><dd><time datetime="{{generated_at}}">{{generated_at}}</time></dd></div>
       </dl>
+    </section>
+
+    <section aria-labelledby="listing-title">
+      <h2 id="listing-title">Paroki.org source listing</h2>
+      {{source_listing}}
+      <p>The source listing is separate from the canonical Indonesian directory below. Missing JSON properties mean unknown values.</p>
     </section>
 
     <section aria-labelledby="files-title">

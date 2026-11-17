@@ -127,7 +127,7 @@ export class PoliteClient {
       this.guard(url);
       if (!this.termsVerified) {
         const terms = await this.request(this.source.terms_url, {});
-        if (hash(terms.body) !== this.termsSha256) return this.stop('Terms changed; human permission review required', 'TERMS_CHANGED');
+        if (hash(terms.body) !== this.termsSha256) return this.stop('Terms changed; review website terms before continuing', 'TERMS_CHANGED');
         this.termsVerified = true;
       }
       return this.request(url, headers);

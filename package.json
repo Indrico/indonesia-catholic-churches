@@ -11,6 +11,7 @@
   "scripts": {
     "discover": "node scripts/discover_profiles.js",
     "extract": "node scripts/extract_profiles.js",
+    "extract:list": "node scripts/extract_listing.js",
     "normalize": "node scripts/normalize.js",
     "deduplicate": "node scripts/deduplicate.js",
     "validate": "node scripts/validate.js",

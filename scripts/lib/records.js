@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
 import { canonicalUrl, compareRecords } from './io.js';
+import { sourceIdentity } from './policy.js';
 
 export const TYPES = ['katedral', 'paroki', 'stasi', 'kapel'];
 const clean = value => typeof value === 'string' && value.trim() && !['-', 'n/a', 'null'].includes(value.trim().toLowerCase()) ? value.trim() : null;
@@ -26,7 +27,7 @@ export function emptyRecord(id) {
   };
 }
 
-function normalizeField(path, value, mappings) {
+export function normalizeField(path, value, mappings) {
   if (path.startsWith('/mass_schedules/')) return value;
   if (path === '/location/latitude' || path === '/location/longitude') {
     if (value === '' || value === null || value === undefined || typeof value === 'boolean') return null;
@@ -192,7 +193,8 @@ export function duplicateCandidates(records) {
     else if ((a.administrative_area.city && a.administrative_area.city === b.administrative_area.city) || (a.diocese.name && a.diocese.name === b.diocese.name)) {
       if (similarity(a.name, b.name) >= 0.90) reasons.push('similar_name');
     }
-    if (a.sources.some(x => b.sources.some(y => canonicalUrl(x.url) === canonicalUrl(y.url)))) reasons.push('same_canonical_url');
+    if (a.sources.some(x => b.sources.some(y => sourceIdentity(x) === sourceIdentity(y)))) reasons.push('same_canonical_url');
+    if (a.contact.phone_e164 && a.contact.phone_e164 === b.contact.phone_e164) reasons.push('same_phone');
     if (a.location.latitude !== null && a.location.longitude !== null && a.location.latitude === b.location.latitude && a.location.longitude === b.location.longitude) reasons.push('same_coordinates');
     if (reasons.length) issues.push({ ids: [a.id, b.id], reasons, resolution: 'pending' });
   }

@@ -34,22 +34,24 @@ test('missing real contact or permission evidence blocks execution', () => {
 test('serialized requests across subdomains respect spacing and identify project', async () => {
   const h = harness(() => new Response('profile'));
   await Promise.all([h.client.get('https://one.example.org/'), h.client.get('https://two.example.org/')]);
-  for (let i = 1; i < h.calls.length; i++) assert.ok(h.calls[i].at - h.calls[i - 1].at >= 2000);
+  for (let i = 1; i < h.calls.length; i++) assert.ok(h.calls[i].at - h.calls[i - 1].at >= 3000);
   assert.ok(h.calls.every(call => call.options.headers['User-Agent'].includes('mailto:directory@institution.test')));
 });
-test('429 honors Retry-After and persists retry time', async () => {
+test('429 stops immediately, persists Retry-After, and halts queued requests', async () => {
   let attempts = 0;
   const h = harness(() => ++attempts === 1 ? new Response('', { status: 429, headers: { 'Retry-After': '7' } }) : new Response('ok'));
-  await h.client.get('https://example.org/profile');
-  assert.equal(attempts, 2);
-  assert.ok(h.waits.includes(7000));
-  assert.ok(h.checkpoints.length);
+  await assert.rejects(h.client.get('https://example.org/profile'), /HTTP 429/);
+  await assert.rejects(h.client.get('https://example.org/another'), /HTTP 429/);
+  assert.equal(attempts, 1);
+  const saved = h.checkpoints.find(item => item.halted?.code === 'HTTP_429');
+  assert.ok(Date.parse(saved.retry_at) >= h.calls.at(-1).at + 7000);
+  assert.ok(!h.waits.includes(7000));
 });
 test('Retry-After accepts HTTP dates and retries are bounded', async () => {
   assert.ok(retryDelay('Tue, 17 Nov 2026 12:00:10 GMT', 0, Date.parse('2026-11-17T12:00:00Z'), () => 0) >= 10000);
   const h = harness(() => new Response('', { status: 503 }));
-  await assert.rejects(h.client.get('https://example.org/profile'), /five attempts/);
-  assert.equal(h.calls.filter(call => call.url.endsWith('/profile')).length, 5);
+  await assert.rejects(h.client.get('https://example.org/profile'), /three attempts/);
+  assert.equal(h.calls.filter(call => call.url.endsWith('/profile')).length, 3);
 });
 test('changed terms stop profile retrieval', async () => {
   const s = source(); s.terms_sha256 = '0'.repeat(64);

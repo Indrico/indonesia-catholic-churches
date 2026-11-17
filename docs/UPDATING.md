@@ -1,6 +1,6 @@
 # Updating and reviewing the dataset
 
-All source updates are manual. Work on a dedicated branch and submit a PR; do not overwrite main directly. The production dataset stays empty until the rights checkpoint passes.
+All source updates are manual. Work on a dedicated branch and submit a PR; do not overwrite main directly. The production dataset stays empty until the rights checkpoint passes. For local listing cards without profile visits, use the separate [private listing workflow](LISTING-EXTRACTION.md). Its artifacts cannot be published by these commands.
 
 ## 1. Establish permission
 
@@ -12,7 +12,7 @@ After an adequate grant, a maintainer reviews and updates `config/sources.json`:
 - Record the actual license, required attribution, grant evidence references, reviewer, and review date. Keep private correspondence out of Git.
 - Set `terms_url` and SHA-256 of the current decoded terms response body. This is a reviewed fingerprint, not permission in itself; there is no auto-approval or force option. Every live command re-fetches and compares it before profiles are requested. A changed body pauses the source for human review, including harmless markup changes.
 - Supply a real institutional contact and project URL for the descriptive User-Agent.
-- Retain the source allowlist and set any approved delay above the two-second minimum. The stricter robots Crawl-delay is honored too.
+- Retain the source allowlist and set any approved delay above the three-second minimum. The stricter robots Crawl-delay is honored too.
 
 Only Paroki.org has a profile adapter. Kemenag aggregate data must not be supplied to that adapter. OSM and differently licensed data need separate future release tooling and rights documentation.
 
@@ -25,7 +25,7 @@ npm run extract -- --source paroki_org
 
 Discovery collects approved profile roots from the listing and sitemap index. Root sitemap files are traversed; a profile subdomain's sitemap identifies its root without making an extra sitemap request per profile. Other source navigation links and unapproved redirects are rejected. Counts of discovered candidates are not church counts.
 
-Requests use one serialized client across source subdomains, at least two seconds between requests, Retry-After including HTTP dates, exponential retry delays, and at most five attempts. HTTP 403, robots denial, CAPTCHA/challenge content, changed terms, and unexpected statuses stop the run. Do not bypass access controls or substitute browser automation to defeat a restriction. Browser rendering is not currently needed or implemented.
+Requests use one serialized client across source subdomains, at least three seconds between requests, Retry-After including HTTP dates, and at most three attempts with exponential backoff for temporary network/5xx errors. HTTP 429 stops immediately, persisting Retry-After for a later manual resume. HTTP 403, robots denial, CAPTCHA/challenge content, changed terms and unexpected statuses also stop the run. Do not bypass access controls or substitute browser automation to defeat a restriction. Browser rendering is not currently needed or implemented.
 
 `.cache/<source_id>/` stores discovery state, raw profile snapshots, observations, failures and resumable network timing. On interruption, rerun the same command. Completed profiles are not fetched again. Failures record the URL, sanitized error reason, and time. Resolve the cause before resuming; do not skip blocked URLs to force completion.
 

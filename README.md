@@ -2,7 +2,7 @@
 
 A source-attributed, versioned dataset of Catholic worship sites in Indonesia, prepared for a future read-only API.
 
-**Status: tooling only.** Production JSON arrays are empty. Bulk extraction and third-party data publication are blocked pending permission. This repository is not a completed national directory, and does not claim to be the first or only directory.
+**Public release status: tooling only.** Production JSON arrays are empty. Private listing extraction supports local collection under a maintainer-attested source grant; redistribution and commercial reuse remain unconfirmed. This repository is not a completed national directory, and does not claim to be the first or only directory.
 
 ## Start here
 
@@ -51,7 +51,16 @@ PR checks build the site without deployment. Deployment and its public-site chec
 
 ## Source updates
 
-The checked-in source configuration intentionally refuses live access. First obtain the documented permissions, record reviewed evidence and attribution, set the approved terms fingerprint, and supply a real institutional contact. The [update procedure](docs/UPDATING.md) explains every stage and review checkpoint.
+For the current **private listing-only** stage, see [local extraction and resume](docs/LISTING-EXTRACTION.md):
+
+```sh
+npm run extract:list -- --sample
+npm run extract:list
+```
+
+These commands require an ignored local grant and write only to `.cache/paroki_org/listing/`. They do not visit profiles or populate public data. Review five sample cards before the first full run. Email is deferred; the real GitHub Issues URL supplies the temporary contact. Unknown country/type and license remain null in staging; public validation stays strict.
+
+The following **profile/publication** workflow remains blocked by the source configuration. First obtain the documented permissions, record reviewed evidence and attribution, set the approved terms fingerprint, and supply a real institutional contact. The [update procedure](docs/UPDATING.md) explains every stage and review checkpoint.
 
 ```sh
 npm run discover -- --source paroki_org

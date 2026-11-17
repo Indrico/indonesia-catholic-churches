@@ -1,8 +1,8 @@
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max';
-import { readJson, rootFile, canonicalUrl } from './io.js';
-import { assertRecordRights } from './policy.js';
+import { readJson, rootFile } from './io.js';
+import { assertRecordRights, sourceIdentity } from './policy.js';
 import { duplicateCandidates, getPointer } from './records.js';
 
 const ajv = new Ajv2020({ allErrors: true, strict: true });
@@ -40,7 +40,7 @@ export async function validateDataset(records, parishes, registry, config) {
       licenses.add(source.license);
       if (/odbl/i.test(source.license)) add(record.id, 'separate_osm_dataset', 'ODbL data belongs in a separately reviewed dataset');
       try {
-        if (registry.identities?.[`${source.source_id}:${canonicalUrl(source.url)}`] !== record.id) add(record.id, 'identity_mapping', 'Each source identity must map to the stable record ID');
+        if (registry.identities?.[`${source.source_id}:${sourceIdentity(source)}`] !== record.id) add(record.id, 'identity_mapping', 'Each source identity must map to the stable record ID');
       } catch { add(record.id, 'invalid_source_url', 'Source URLs must be public HTTP(S) URLs without credentials'); }
     }
     const excluded = new Set(['id', 'sources', 'field_provenance', 'conflicts', 'verification']);

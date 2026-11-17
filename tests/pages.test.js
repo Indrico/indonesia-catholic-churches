@@ -44,6 +44,8 @@ test('Pages publishes only allowed files, preserves export bytes, and clearly ma
   const root = await fixture();
   try {
     await writeJson(path.join(root, '.cache/samples/private.json'), { personal_contact: 'must not publish' });
+    await writeJson(path.join(root, '.cache/paroki_org/listing/churches.json'), [{ name: 'PRIVATE_LISTING_SENTINEL' }]);
+    await writeJson(path.join(root, '.cache/paroki_org/listing/permission.json'), { attestation: 'PRIVATE_GRANT_SENTINEL' });
     await writeFile(path.join(root, '.env'), 'PRIVATE_SENTINEL=must-not-publish');
     const result = await buildPages(root);
     const published = await files(result.directory);

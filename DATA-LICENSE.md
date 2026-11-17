@@ -16,7 +16,7 @@ Only one confirmed data license may be composed in a primary export by the curre
 
 ## Source-specific status
 
-- **Paroki.org:** the inspected [terms](https://paroki.org/terms/) allow attributed non-commercial use and require written permission for commercial use. Bulk republication remains unresolved. The primary dataset remains empty pending an adequate grant. No source attribution wording has been accepted on the operator's behalf.
+- **Paroki.org:** the inspected [terms](https://paroki.org/terms/) allow attributed non-commercial use and require written permission for commercial use. The maintainer reports oral permission for local listing extraction; its attestation is private, and no actual grant date or license was supplied. Bulk republication remains unresolved. The primary dataset remains empty pending an adequate grant. No source attribution wording has been accepted on the operator's behalf.
 - **Kemenag:** the [dataset page](https://bimaskatolik.kemenag.go.id/index.php/dataset/5) provides no identified reuse license. Its linked workbook was inspected only to establish its aggregate structure; it is not redistributed here.
 - **Existing GitHub projects:** data reuse rights were not established. No seed records, SQL records, application code, or source fixtures were copied.
 - **OpenStreetMap / Gereja Bersaudara OSM layer:** OSM is licensed under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/) and requires attribution to OpenStreetMap contributors and applicable share-alike compliance. No OSM-derived dataset is included in this release.

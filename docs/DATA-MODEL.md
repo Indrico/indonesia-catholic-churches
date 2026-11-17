@@ -12,6 +12,8 @@ IDs are UUID v4 values assigned once, independent of names. The identity registr
 
 `parent_parish_id` refers to the **separate parish register**, not another site. Create and source the parish organization first, then add a confirmed relationship with field provenance. The current extractor deliberately does not infer parish parentage from names, proximity, or JSON-LD `parentOrganization` containing a diocese. Parish entries and relationships are curated manually using the same rights and provenance checks.
 
+For listing observations, optional `sources[].identity_url` identifies the listed profile while `sources[].url` remains the page actually read. Identity validation and duplicate URL checks use `identity_url` when present, falling back to `url` for existing profile observations. Optional `location.google_maps_url` preserves the supplied map link without visiting it. [Private listing staging](LISTING-EXTRACTION.md) additionally permits unknown country/type and license, and never becomes public data automatically.
+
 ## Fields
 
 | Field | Meaning |

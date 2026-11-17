@@ -1,6 +1,7 @@
 {
   "project_url": "https://github.com/Indrico/indonesia-catholic-churches",
   "contact": null,
+  "contact_url": "https://github.com/Indrico/indonesia-catholic-churches/issues",
   "sources": [
     {
       "id": "paroki_org",
@@ -10,7 +11,7 @@
       "discovery_urls": ["https://paroki.org/browse/", "https://paroki.org/sitemap.xml"],
       "terms_url": "https://paroki.org/terms/",
       "terms_sha256": null,
-      "delay_ms": 2000,
+      "delay_ms": 3000,
       "permission": {
         "extraction": "pending",
         "redistribution": "pending",
